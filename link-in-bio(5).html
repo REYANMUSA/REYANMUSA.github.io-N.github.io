@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finds</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --paper: #FAF7F1;
+    --ink: #15130F;
+    --pop: #FF4425;
+    --gold: #F2A93B;
+    --card: #FFFFFF;
+    --edge: #ECE6D9;
+    --muted: #726C5E;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--paper);
+    font-family:'Inter', sans-serif;
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+  }
+
+  .page{
+    width:100%;
+    max-width:440px;
+    padding-bottom:64px;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    height:340px;
+    background-image:
+      linear-gradient(180deg, rgba(17,15,11,0.15) 0%, rgba(17,15,11,0.55) 65%, var(--paper) 100%),
+      url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=80');
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:center;
+    text-align:center;
+    padding:0 24px 34px;
+    animation: fadeIn 0.7s ease both;
+  }
+
+  @keyframes fadeIn{
+    from{ opacity:0; transform:translateY(8px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .avatar{
+    width:64px;
+    height:64px;
+    border-radius:18px;
+    margin-bottom:14px;
+    background: linear-gradient(135deg, var(--pop), var(--gold));
+    border:2.5px solid var(--paper);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Archivo Black', sans-serif;
+    font-size:24px;
+    color:var(--paper);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  }
+
+  .handle{
+    font-family:'Archivo Black', sans-serif;
+    font-size:25px;
+    letter-spacing:-0.01em;
+    color:#fff;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+  }
+
+  .tag{
+    color:rgba(255,255,255,0.88);
+    font-size:13.5px;
+    margin-top:7px;
+    line-height:1.55;
+    font-weight:500;
+    max-width:280px;
+  }
+
+  .cta{
+    margin-top:18px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--pop);
+    color:#fff;
+    font-weight:700;
+    font-size:13.5px;
+    padding:11px 20px;
+    border-radius:100px;
+    text-decoration:none;
+    box-shadow: 0 6px 16px rgba(255,68,37,0.4);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .cta:hover{ transform:translateY(-2px); box-shadow: 0 9px 20px rgba(255,68,37,0.45); }
+  .cta:active{ transform:translateY(0); }
+  .cta svg{ width:13px; height:13px; }
+
+  /* ---------- SEARCH ---------- */
+  .search-wrap{
+    padding:0 20px;
+    margin-top:-22px;
+    position:relative;
+    z-index:2;
+  }
+
+  .search-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--card);
+    border:1px solid var(--edge);
+    border-radius:14px;
+    padding:13px 16px;
+    box-shadow: 0 10px 24px rgba(20,17,10,0.10);
+  }
+
+  .search-box svg{
+    width:17px;
+    height:17px;
+    color:var(--muted);
+    flex-shrink:0;
+  }
+
+  .search-box input{
+    border:none;
+    outline:none;
+    background:transparent;
+    font-family:'Inter', sans-serif;
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--ink);
+    width:100%;
+  }
+  .search-box input::placeholder{ color:var(--muted); font-weight:500; }
+
+  .search-clear{
+    border:none;
+    background:var(--edge);
+    color:var(--muted);
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    font-size:12px;
+    line-height:1;
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .search-box.has-value .search-clear{ display:flex; }
+
+  .no-results{
+    display:none;
+    text-align:center;
+    color:var(--muted);
+    font-size:13.5px;
+    padding:26px 10px;
+  }
+
+  .badge{
+    font-family:'Archivo Black', sans-serif;
+    font-size:10.5px;
+    color:var(--muted);
+    background:var(--paper);
+    border:1px solid var(--edge);
+    border-radius:6px;
+    padding:2px 6px;
+    flex-shrink:0;
+    margin-left:6px;
+  }
+  .link.featured .badge{ background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.2); color:#e8e3d6; }
+
+  /* ---------- CONTENT ---------- */
+  .content{ padding:0 20px; }
+
+  .section-label{
+    font-size:11.5px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--muted);
+    margin:30px 2px 12px;
+  }
+  .content > .section-label:first-child{ margin-top:26px; }
+
+  .link{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--card);
+    border:1px solid var(--edge);
+    border-radius:16px;
+    padding:14px 15px;
+    margin-bottom:11px;
+    text-decoration:none;
+    color:var(--ink);
+    box-shadow: 0 1px 2px rgba(20,17,10,0.04);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+
+  .link:hover{
+    transform:translateY(-2px);
+    box-shadow: 0 10px 22px rgba(20,17,10,0.09);
+    border-color:transparent;
+  }
+  .link:active{ transform:translateY(0) scale(0.99); }
+
+  .link.featured{
+    background: var(--ink);
+    border-color:var(--ink);
+  }
+  .link.featured .link-title{ color:#fff; }
+  .link.featured .link-sub{ color:#b9b3a2; }
+  .link.featured .arrow{ color:#fff; }
+
+  .thumb{
+    width:46px;
+    height:46px;
+    border-radius:12px;
+    flex-shrink:0;
+    background: linear-gradient(135deg, var(--gold), var(--pop));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:19px;
+  }
+  .link.featured .thumb{ background:linear-gradient(135deg, var(--pop), #ff8a3d); }
+
+  .link-body{ flex:1; min-width:0; }
+
+  .link-title{
+    font-weight:700;
+    font-size:15px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .link-sub{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .arrow{
+    color:var(--muted);
+    flex-shrink:0;
+    transition: transform 0.15s ease;
+  }
+  .link:hover .arrow{ transform:translateX(3px); }
+  .arrow svg{ width:16px; height:16px; }
+
+  /* ---------- SOCIALS ---------- */
+  .socials{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-top:32px;
+  }
+
+  .socials a{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:var(--card);
+    border:1px solid var(--edge);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .socials a svg{ width:18px; height:18px; transition: fill 0.15s ease, stroke 0.15s ease; }
+  .socials a:hover{ transform:translateY(-3px); }
+  .socials a.tt:hover{ background:var(--ink); }
+  .socials a.tt:hover svg{ fill:#fff; }
+  .socials a.ig:hover{ background: linear-gradient(135deg,#f9ce34,#ee2a7b,#6228d7); border-color:transparent; }
+  .socials a.ig:hover svg{ stroke:#fff; }
+  .socials a.ig:hover svg circle:last-child{ fill:#fff; }
+  .socials a.yt:hover{ background:var(--pop); }
+  .socials a.yt:hover svg{ fill:#fff; }
+
+  .footer-note{
+    text-align:center;
+    color:var(--muted);
+    font-size:11px;
+    margin-top:34px;
+    line-height:1.6;
+    padding:0 30px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="avatar">?</div>
+    <div class="handle">@yourhandle</div>
+    <div class="tag">stuff i actually use, not stuff i'm paid to say</div>
+    <a class="cta" href="#latest">
+      see today's find
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+    </a>
+  </div>
+
+  <div class="search-wrap">
+    <div class="search-box" id="searchBox">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="searchInput" type="text" inputmode="numeric" placeholder="search by video number (e.g. 47)">
+      <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
+    </div>
+  </div>
+
+  <div class="content" id="content">
+
+    <div class="section-label" id="latest">Latest</div>
+    <a class="link featured" href="#" target="_blank" data-num="4" data-name="product name goes here">
+      <div class="thumb">🔥</div>
+      <div class="link-body">
+        <div class="link-title">Product name goes here</div>
+        <div class="link-sub">the one from today's video</div>
+      </div>
+      <div class="badge">#4</div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
+
+    <div class="section-label">Earlier finds</div>
+
+    <a class="link" href="#" target="_blank" data-num="3" data-name="product 3">
+      <div class="thumb">📦</div>
+      <div class="link-body">
+        <div class="link-title">Product 3</div>
+        <div class="link-sub">short description</div>
+      </div>
+      <div class="badge">#3</div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
+
+    <a class="link" href="#" target="_blank" data-num="2" data-name="product 2">
+      <div class="thumb">📦</div>
+      <div class="link-body">
+        <div class="link-title">Product 2</div>
+        <div class="link-sub">short description</div>
+      </div>
+      <div class="badge">#2</div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
+
+    <a class="link" href="#" target="_blank" data-num="1" data-name="product 1">
+      <div class="thumb">📦</div>
+      <div class="link-body">
+        <div class="link-title">Product 1</div>
+        <div class="link-sub">short description</div>
+      </div>
+      <div class="badge">#1</div>
+      <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+    </a>
+
+    <div class="no-results" id="noResults">no video with that number yet — check the number in the caption and try again</div>
+
+    <div class="socials">
+      <a class="tt" href="#" target="_blank" aria-label="TikTok">
+        <svg viewBox="0 0 24 24" fill="var(--ink)"><path d="M16.6 5.82c-.9-.85-1.42-2.02-1.42-3.32h-3.03v13.9c0 1.63-1.32 2.95-2.95 2.95a2.95 2.95 0 0 1-2.95-2.95 2.95 2.95 0 0 1 2.95-2.95c.28 0 .55.04.8.11V10.5a6.1 6.1 0 0 0-.8-.05 6 6 0 0 0-6 6 6 6 0 0 0 6 6 6 6 0 0 0 6-6V9.1a8.28 8.28 0 0 0 4.86 1.56V7.63c-1.13 0-2.18-.36-3.03-1a5.3 5.3 0 0 1-.43-.42z"/></svg>
+      </a>
+      <a class="ig" href="#" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="var(--ink)" stroke="none"/></svg>
+      </a>
+      <a class="yt" href="#" target="_blank" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" fill="var(--ink)"><path d="M22 12s0-3.2-.4-4.7c-.24-.87-.93-1.56-1.8-1.8C18.3 5 12 5 12 5s-6.3 0-7.8.5c-.87.24-1.56.93-1.8 1.8C2 8.8 2 12 2 12s0 3.2.4 4.7c.24.87.93 1.56 1.8 1.8C5.7 19 12 19 12 19s6.3 0 7.8-.5c.87-.24 1.56-.93 1.8-1.8.4-1.5.4-4.7.4-4.7z" stroke="none"/><path d="M10 9.5l5 2.5-5 2.5v-5z" fill="var(--paper)"/></svg>
+      </a>
+    </div>
+
+    <div class="footer-note">
+      some links are affiliate links — i may earn a small commission at no extra cost to you.
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const input = document.getElementById('searchInput');
+  const box = document.getElementById('searchBox');
+  const clearBtn = document.getElementById('searchClear');
+  const links = Array.from(document.querySelectorAll('.link'));
+  const labels = Array.from(document.querySelectorAll('.section-label'));
+  const noResults = document.getElementById('noResults');
+
+  function runSearch(){
+    const q = input.value.trim().toLowerCase();
+    box.classList.toggle('has-value', q.length > 0);
+
+    if(!q){
+      links.forEach(l => l.style.display = 'flex');
+      labels.forEach(l => l.style.display = 'block');
+      noResults.style.display = 'none';
+      return;
+    }
+
+    let anyVisible = false;
+    links.forEach(l => {
+      const num = l.getAttribute('data-num') || '';
+      const name = l.getAttribute('data-name') || '';
+      const match = num === q || name.includes(q);
+      l.style.display = match ? 'flex' : 'none';
+      if(match) anyVisible = true;
+    });
+
+    labels.forEach(l => l.style.display = 'none');
+    noResults.style.display = anyVisible ? 'none' : 'block';
+  }
+
+  input.addEventListener('input', runSearch);
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    runSearch();
+    input.focus();
+  });
+</script>
+
+</body>
+</html>
